@@ -36,7 +36,7 @@ public class SchedularTest {
 		scheduler.wakeup();
 		assertFalse(alarmAlertSpy.isAlerted());
 	}
-
+	
 	@Test
 	public void alertIfSheduledAndItsTheTime() throws Exception {
 		scheduleTime = 12 * 60; // 12 Noon
@@ -45,5 +45,41 @@ public class SchedularTest {
 		scheduler.wakeup();
 		assertTrue(alarmAlertSpy.isAlerted());
 	}
+	
+	@Test
+	public void noalertIfSheduledAndItsNotTheTime() throws Exception {
+		scheduleTime = 12 * 60; // 12 Noon
+		scheduler.addSchedule(EnumScheduleDay.MONDAY, scheduleTime);
+		fakeTimeService.setTime(EnumScheduleDay.THURSDAY, scheduleTime);
+		scheduler.wakeup();
+		assertFalse(alarmAlertSpy.isAlerted());
+	}
+	
+	@Test
+	public void alertItsTheTimeForAllDays() throws Exception {
+		scheduleTime = 12 * 60; // 12 Noon
+		scheduler.addSchedule(EnumScheduleDay.ALL, scheduleTime);
+		for (EnumScheduleDay enumDay : EnumScheduleDay.values())
+		{
+			fakeTimeService.setTime(enumDay, scheduleTime);
+			scheduler.wakeup();
+			assertTrue(alarmAlertSpy.isAlerted());
+			if (enumDay.getday()==EnumScheduleDay.SATURDAY.getday()){
+				break;
+			}			
+		}
+		
+	}
+	
+	@Test
+	public void alertIfItsScheduleTimeAndIfWorkingDays() throws Exception {
+		scheduleTime = 12 * 60; // 12 Noon
+		scheduler.addSchedule(EnumScheduleDay.WORKINGDAY, 300);
+		fakeTimeService.setTime(EnumScheduleDay.TUESDAY, scheduleTime);
+		scheduler.wakeup();
+		assertFalse(alarmAlertSpy.isAlerted());
+	}
+	
+	
 
 }

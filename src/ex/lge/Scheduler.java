@@ -19,8 +19,17 @@ public class Scheduler {
 	}
 
 	public void wakeup() {
-
-		if (timeService.getCurrentDay() == scheduleDay.getday()
+		if(scheduleDay.getday()== EnumScheduleDay.WORKINGDAY.getday()) //working days
+		{
+			for(int enumday =EnumScheduleDay.MONDAY.getday(); enumday < EnumScheduleDay.SATURDAY.getday();enumday++)
+			{
+				if(timeService.getCurrentMinute() == ScheduleTime)
+					alarmAlert.startAlarm();
+			}
+		}
+		else if(scheduleDay.getday()== EnumScheduleDay.ALL.getday() && timeService.getCurrentMinute() == ScheduleTime ) //Alldays
+			alarmAlert.startAlarm();
+		else if (timeService.getCurrentDay() == scheduleDay.getday()
 				&& timeService.getCurrentMinute() == ScheduleTime) {
 			alarmAlert.startAlarm();
 		}
