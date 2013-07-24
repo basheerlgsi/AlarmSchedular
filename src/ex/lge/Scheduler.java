@@ -1,38 +1,36 @@
 package ex.lge;
 
 import ex.alarm.driver.AlarmAlert;
-import ex.fk.AlarmAlertSpy;
-import ex.fk.FakeTimeService;
 import ex.os.service.TimeService;
-
+import ex.lge.EnumScheduleDay;
 
 public class Scheduler {
 
-	String m_strDay;
-	int m_iTime;
-	AlarmAlert malmspy;
-	TimeService mtmservice;
-	
-	public Scheduler(AlarmAlert almspy,TimeService tmservice){
-		malmspy = almspy;
-		mtmservice = tmservice;
-		m_iTime=0;
-	}
-	
-	
-	public void wakeup() {
-		
-				
-		if (mtmservice.getCurrentDay()== 1 && mtmservice.getCurrentMinute()== m_iTime)
-		{
-			malmspy.startAlarm();
-		}
-	
+	EnumScheduleDay scheduleDay;
+	int ScheduleTime;
+	AlarmAlert alarmAlert;
+	TimeService timeService;
+
+	public Scheduler(AlarmAlert almspy, TimeService tmservice) {
+		alarmAlert = almspy;
+		timeService = tmservice;
+		ScheduleTime = -1;
+		scheduleDay = EnumScheduleDay.SUNDAY;
 	}
 
-	public void addSchedule(String monday, int i) {
-		m_strDay = monday;
-		m_iTime = i;
+	public void wakeup() {
+
+		if (timeService.getCurrentDay() == scheduleDay.getday()
+				&& timeService.getCurrentMinute() == ScheduleTime) {
+			alarmAlert.startAlarm();
+		}
+
+	}
+
+	public void addSchedule(EnumScheduleDay inputScheduleDay,
+			int inputScheduleTime) {
+		scheduleDay = inputScheduleDay;
+		ScheduleTime = inputScheduleTime;
 	}
 
 }
